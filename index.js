@@ -20,11 +20,11 @@ const port = process.env.PORT;
 
 database.connect();
 //Su dung PUG xét đến thư mục ./views rồi nên lát chạy chỉ cần render đến index thôi
-app.set('views', `${dirname}/views`)
+app.set('views', `${__dirname}/views`);
 app.set('view engine', 'pug')
 
 // sử dụng các file tĩnh trong./public
-app.use(express.static((`${dirname}/public`)));
+app.use(express.static(`${__dirname}/public`));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
