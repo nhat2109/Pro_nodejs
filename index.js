@@ -4,6 +4,10 @@ const express = require('express');
 var methodOverride = require('method-override')
 // sử dụng env để bảo mật npm i dotenv
 require('dotenv').config();
+// thư viện thông báo
+const flash = require('express-flash')
+var cookieParser = require('cookie-parser')
+var session = require('express-session')
 // npm i mongoose
 const database = require('./config/database');
 const app = express();
@@ -32,7 +36,12 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse dữ liệu post
 app.use(methodOverride('_method'))
 
-
+// use libary of flash
+//Flash
+app.use(cookieParser('JKJKJKJKJKJKJLG'));
+app.use(session({ cookie: { maxAge: 60000 }}));
+app.use(flash());
+// End flash
 // Router
 route(app);
 routeAdmin(app);

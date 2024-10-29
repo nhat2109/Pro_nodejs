@@ -1,4 +1,5 @@
 const Product = require('../../models/product.model');
+const systemConfig = require('../../config/system');
 // [GET] /admin/products
 // export hàm xử lí ra home.router.js
 const fillterStatusHelper = require('../../helpers/fillterStatus');
@@ -69,7 +70,10 @@ module.exports.index = async (req, res) =>{
     // find: tìm kiếm từng trường của sản phẩm, nếu tìm thấy thì sẽ trả về sản phẩm đó, nếu không thì trả về null
     // limit: số lượng sản phẩm trả về
     // skip: số lượng sản phẩm bỏ qua để trả về sản phẩm tiếp theo (tính từ 0)
-    const products = await Product.find(find).limit(objectPagination.limitItems).skip(objectPagination.skip);
+    const products = await Product.find(find)
+    .sort({position: "desc"})
+    .limit(objectPagination.limitItems)
+    .skip(objectPagination.skip);
     // console.log(products)
     res.render("admin/pages/products/index", {
         pageTitle: "Danh sách sản phẩm", 
@@ -80,6 +84,7 @@ module.exports.index = async (req, res) =>{
     });
 }
 //[PATCH] /change-status/:status/:id
+
 // dùng async await để update lại 
 module.exports.changeStatus = async (req, res) => {
     const status = req.params.status;
@@ -87,23 +92,55 @@ module.exports.changeStatus = async (req, res) => {
 
     await Product.updateOne({_id: id}, {status: status}); 
     // console.log(req.params);
+    req.flash("success", "Cập nhật trạng thái thành công");
     res.redirect("back");
 }
-//[PATCH] /change-multi
+// [PATCH] /admin/products/change-multi
+
 // dùng async await để update lại 
 module.exports.changeMulti = async (req, res) => {  
     const type = req.body.type;
+    // console.log(req.body.type);
     const ids = req.body.ids.split(', ');
     switch (type) {
         case 'active':
             // await để sd cho mongodb trả về nhiều id cùng lúc nếu type là ative thì tất cả active
             await Product.updateMany({_id: { $in: ids }}, { status: 'active' });
+            req.flash("success", `Cập nhật trạng thái thành công ${ids.length} sản phẩm`);
             break;
         case 'inactive': // ngược lại 
             await Product.updateMany({_id: { $in: ids }}, { status: 'inactive' });
+            req.flash("success", `Cập nhật trạng thái thành công ${ids.length} sản phẩm`);
+            break;
+        case 'delete-all': // xóa tất cả 
+            await Product.updateMany(
+                {_id: {$in:ids}},
+                {
+                    deleted: true,
+                    deletedAt: new Date()
+                }
+            )
+            req.flash("success", `Đã xóa thành công ${ids.length} sản phẩm`);
+            break;
+        case 'change-position': // thay đổi vị trí, sắp xếp vtri
+            for (const item of ids){
+                let[id, position] = item.split("-");
+                position = parseInt(position);
+                // console.log(id);
+                // console.log(position);
+                await Product.updateMany(
+                    {
+                        _id: {$in: id}
+                    },
+                    {
+                        position: position
+                    }
+                )
+            }
             break;
         default:
             break;
+        
     }
     // khi submit thì về trang nguyên bản 
     res.redirect("back");
@@ -111,7 +148,7 @@ module.exports.changeMulti = async (req, res) => {
 }
 
 
-// delete item 
+// [DELETE] /admin/products/delete/:id
 module.exports.deleteItem = async (req, res) => {
     const id = req.params.id;
     await Product.updateOne(
@@ -120,7 +157,116 @@ module.exports.deleteItem = async (req, res) => {
             deleted: true,
             deletedAt: new Date()
         }); 
+    req.flash("success", `Đã xóa thành công sản phẩm`);
     // console.log(req.params);
     res.redirect("back");
 }
 // end delete item
+
+// [GET] /admin/products/create
+module.exports.create = async (req, res) => {
+   res.render("admin/pages/products/create", 
+    {
+       pageTitle: "Thêm mới sản phẩm", 
+    });
+}
+// end delete item
+
+// [POST] /admin/products/create
+module.exports.createPost = async (req, res) => {
+   
+    req.body.price = parseInt(req.body.price);
+    req.body.discountPercentage = parseInt(req.body.discountPercentage);
+    req.body.stock = parseInt(req.body.stock);
+    // lấy vị trí còn trống 
+    if (req.body.position == "") {
+        const countProducts = await Product.countDocuments();
+        let newPosition = countProducts + 1;
+    
+        // Tìm vị trí còn trống
+        const existingPositions = await Product.find({}).select('position');
+        const usedPositions = existingPositions.map(product => product.position);
+        
+        while (usedPositions.includes(newPosition)) {
+            newPosition++;
+        }
+        
+        req.body.position = newPosition;
+    } else {
+        req.body.position = parseInt(req.body.position);
+    }
+    
+    if(req.file)
+    {
+        req.body.thumbnail = `/uploads/${req.file.filename}`;
+    }
+    const product = new Product(req.body);
+    await product.save();
+
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
+ }
+
+ // [GET] /admin/products/edit/:id
+module.exports.edit = async (req, res) => {
+   try{
+    let find ={
+        _id: req.params.id,
+        deleted: false,
+    };
+    // lấy đc tt sp đó với id đó
+    const product = await Product.findOne(find);
+    // console.log(product);
+    res.render("admin/pages/products/edit", 
+     {
+        product: product,  // trả về dữ liệu của product vào biến product cho view edit
+        pageTitle: "Chỉnh sửa sản phẩm", 
+     });
+   }catch(error){
+        req.redirect(`${systemConfig.prefixAdmin}/products`);
+   }
+   
+ }
+ // end edit item
+
+ // [PATCH] /admin/products/edit/:id
+module.exports.editPatch = async (req, res) => {
+   
+    req.body.price = parseInt(req.body.price);
+    req.body.discountPercentage = parseInt(req.body.discountPercentage);
+    req.body.stock = parseInt(req.body.stock);
+    req.body.position = parseInt(req.body.position);
+    if(req.file){
+        req.body.thumbnail = `/uploads/${req.file.filename}`;
+    }
+    try{
+        await Product.updateOne({_id: req.params.id}, req.body);
+        req.flash("success", "Cập nhật sản phẩm thành công");
+    }catch(error){
+        req.flash("error", "Cập nhật thất bại");
+    }
+    res.redirect("back");
+ }
+ // End [PATCH] /admin/products/edit/:id
+ 
+// [GET] /admin/products/detail/:id
+module.exports.detail = async (req, res) => {
+    try{
+     let find ={
+         _id: req.params.id,
+         deleted: false,
+     };
+     // lấy đc t.tin sp đó với id đó
+     const product = await Product.findOne(find);
+     // console.log(product);
+     res.render("admin/pages/products/detail", 
+      {
+         product: product,  // trả về dữ liệu của product vào biến product cho view detail
+         pageTitle: product.title, 
+      });
+    }catch(error){
+         req.redirect(`${systemConfig.prefixAdmin}/products`);
+    }
+    
+  }
+  
+// End [GET] /admin/products/detail/:id

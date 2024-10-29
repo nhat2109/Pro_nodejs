@@ -1,6 +1,8 @@
 // file này để sử lí dữ liệu khi connect với mongoodb
 // gọi mongoose để kết nối với mongodb
 const  mongoose = require("mongoose");
+const slug = require('mongoose-slug-updater');
+mongoose.plugin(slug);
 // sau đó là lấy ra các lược đồ với cách trường tương ứng với các kiểu dữ liệu 
 const productSchema = new mongoose.Schema({ 
     title: String,
@@ -10,10 +12,21 @@ const productSchema = new mongoose.Schema({
     stock: Number,
     thumbnail: String,
     status: String,
+    slug: {
+        type: String,
+        slug: 'title',
+        unique: true,
+    },
     position: Number,
-    deleted: Boolean,
-    deletedAt: Date,
-});
+    deleted: {
+        type: Boolean,
+        default: false,
+    },
+    deletedAt: Date
+},{
+    timestamps: true,
+}
+);
 const Product = mongoose.model("Product", productSchema, "products");
 module.exports = Product;
 

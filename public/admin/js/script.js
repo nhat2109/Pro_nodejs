@@ -25,7 +25,6 @@ if(buttonsStatus.length > 0) {
 }
 
 // lấy ra formsearch 
-
 const formSearch = document.querySelector('#form-search');
 // kiểm tra 
 if(formSearch) {
@@ -46,6 +45,7 @@ if(formSearch) {
     });
 }
 // End form search 
+
 // pagination
  const buttonPagination = document.querySelectorAll('[button-pagination]');
  if(buttonPagination)
@@ -103,6 +103,7 @@ if(checkboxMulti)
     })
 }
 // End check box multi
+
 // Form change multi gửi những id được check sang cho bên back xử lí
 const formChangeMulti = document.querySelector('[form-change-multi]');
 if(formChangeMulti)
@@ -114,6 +115,16 @@ if(formChangeMulti)
         // lấy ra tất cả nhưng input đc checkbox
         const inputsChecked = checkboxMulti.querySelectorAll("input[name='id']:checked");
         // console.log(inputsChecked);
+
+        const typeChange = e.target.elements.type.value;
+        if(typeChange === "delete-all"){
+            const isConfirm = confirm("Bạn có muốn xóa tất cả không?");
+            if(!isConfirm)
+            {
+                return;
+            }
+        }
+
         if(inputsChecked.length > 0)
         {
             // tạo ra mảng để add vào 
@@ -123,7 +134,15 @@ if(formChangeMulti)
             // duyệt qua mảng ids và add vào input ids
             inputsChecked.forEach(input =>{
                 const id = input.value;
-                ids.push(id);
+                if(typeChange === "change-position")
+                {
+                    const position = input.closest("tr")
+                    .querySelector("input[name='position']").value;
+                    ids.push(`${id}-${position}`);
+                }else
+                {
+                    ids.push(id);
+                }
             });
             // chuyển mảng ids thành chuỗi và add vào input ids ở form gửi ảo ở phần checkbox multi ảo ở phần checkbox multi
             inputIds.value = ids.join(", ");
@@ -147,8 +166,8 @@ const buttonDelete = document.querySelectorAll("[button-delete]");
             const isConfirm = confirm("Bạn có chắc muốn xóa sản phẩm này không");
             if(isConfirm) {
                 const id = button.getAttribute("data-id");
-                console.log(id);
-                console.log(path);
+                // console.log(id);
+                // console.log(path);
                 const action = `${path}/${id}?_method=DELETE`; // khi gửi url lên thì phải có pthuc xóa đằng sau
                 formDeleteItem.action = action;
                 formDeleteItem.submit();
@@ -170,8 +189,8 @@ const buttonRestore = document.querySelectorAll("[button-restore]");
             const isConfirm = confirm("Bạn có chắc muốn khôi phục sản phẩm này không");
             if(isConfirm) {
                 const id = button.getAttribute("data-id");
-                console.log(id);
-                console.log(path);
+                // console.log(id);
+                // console.log(path);
                 const action = `${path}/${id}?_method=PATCH`; // khi gửi url lên thì phải có pthuc xóa đằng sau
                 formDeleteItem.action = action;
                 formDeleteItem.submit();
@@ -180,3 +199,36 @@ const buttonRestore = document.querySelectorAll("[button-restore]");
     });
  }
 // End Restore Item
+
+//Show Alert
+const showAlert = document.querySelector("[show-alert]");
+if(showAlert)
+{
+    const time = parseInt(showAlert.getAttribute("data-time"));
+    const closeAlert = showAlert.querySelector("[close-alert]");
+    setTimeout(() => {
+        showAlert.classList.add("alert-hidden");
+    }, time);  // mili giay * 1000 = giay
+    closeAlert.addEventListener("click", () => {
+        showAlert.classList.add("alert-hidden");
+    });
+}
+//End Alert
+
+//Upload Image
+const uploadImage = document.querySelector("[upload-image]");
+if (uploadImage){
+    const uploadImageInput = document.querySelector("[upload-image-input]");
+    const uploadImagePreview = document.querySelector("[upload-image-preview]");
+    uploadImageInput.addEventListener("change", (e) => {
+        console.log(e);
+        const file = e.target.files[0];
+        if(file)
+        {
+            uploadImagePreview.src = URL.createObjectURL(file);
+        }
+    })
+}
+//End Upload Image
+
+
