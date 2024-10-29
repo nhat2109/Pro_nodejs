@@ -38,7 +38,8 @@ app.use(methodOverride('_method'))
 
 // use libary of flash
 //Flash
-app.use(cookieParser('JKJKJKJKJKJKJLG'));
+// Sử dụng cookie-parser với SESSION_SECRET từ .env
+app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(session({ cookie: { maxAge: 60000 }}));
 app.use(flash());
 // End flash
