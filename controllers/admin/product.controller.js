@@ -51,6 +51,14 @@ module.exports.index = async (req, res) =>{
         req.query,
         countProducts
     );
+    //Sort  
+    let sort ={};
+    if(req.query.sortKey && req.query.sortValue){
+        sort[req.query.sortKey] = req.query.sortValue;
+    }else{
+        sort.position= "desc";
+    }
+    // End sort
     // // laasy params trên url
     // if(req.query.page){
     //     // nếu k có thì mặc định là 1, nếu kphari thì sẽ lấy ra param hiên url
@@ -71,7 +79,7 @@ module.exports.index = async (req, res) =>{
     // limit: số lượng sản phẩm trả về
     // skip: số lượng sản phẩm bỏ qua để trả về sản phẩm tiếp theo (tính từ 0)
     const products = await Product.find(find)
-    .sort({position: "desc"})
+    .sort(sort)
     .limit(objectPagination.limitItems)
     .skip(objectPagination.skip);
     // console.log(products)

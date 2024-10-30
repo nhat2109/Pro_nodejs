@@ -1,9 +1,10 @@
-extends ../../layouts/default.pug
+extends ../../layouts/default.pug 
 include ../../mixins/fillter-status.pug 
 include ../../mixins/search.pug 
 include ../../mixins/pagination.pug 
 include ../../mixins/form-change-multi.pug 
 include ../../mixins/alert.pug
+include ../../mixins/sort.pug
 
 block main 
     +alert-success(5000)
@@ -16,18 +17,23 @@ block main
                     +fillter-status(fillterStatus)
                 .col-6
                     +search(keyword)
-                
+    .card.mb-3
+        .card-header Sắp xếp
+        .card-body
+            .row 
+                .col-4
+                    +sort()
     .card.mb-3
         .card-header Danh sách sản phẩm
         .card-body
-           .row 
-            .col-8
-                +form-change-multi(`${prefixAdmin}/products/change-multi?_method=PATCH`)
-            .col-4
-                a(
-                    href=`${prefixAdmin}/products/create`
-                    class="btn btn-outline-success"
-                ) + Thêm mới
+            .row 
+                .col-8
+                    +form-change-multi(`${prefixAdmin}/products/change-multi?_method=PATCH`)
+                .col-4
+                    a(
+                        href=`${prefixAdmin}/products/create`
+                        class="btn btn-outline-success"
+                    ) + Thêm mới
             table(
                 class="table table-hover table-sm"
                 checkbox-multi
@@ -51,7 +57,7 @@ block main
                                     type="checkbox"
                                     name="id"
                                     value=item.id
-                                     )
+                                )
                             td #{index + 1}
                             td 
                                 img(
@@ -59,7 +65,7 @@ block main
                                     alt=item.title
                                     width="100px"
                                     height="auto"
-                                    )
+                                )
                             td #{item.title}
                             td #{item.price}
                             td 
@@ -75,77 +81,36 @@ block main
                                     a(
                                         href="javascript:;"
                                         button-change-status
-                                        data-id = item.id
-                                        button
-                                        data-status = item.status
+                                        data-id=item.id
+                                        data-status=item.status
                                         class="badge badge-success"
-                                        ) Hoạt động
+                                    ) Hoạt động
                                 else
                                     a(
                                         href="javascript:;" 
                                         button-change-status
-                                        data-id = item.id
-                                        data-status = item.status
+                                        data-id=item.id
+                                        data-status=item.status
                                         class="badge badge-danger"
-                                        ) Không hoạt động
-                                //-   a(
-                            //-     href="#"
-                            //-     class=`badge ${item.status === "active" ? "badge-success" : "badge-danger"}`
-                            //-     ) #{item.status === "active" ? "active" : "inactive"}
+                                    ) Không hoạt động
                             td 
                                 a(
                                     href=`${prefixAdmin}/products/edit/${item.id}`,
                                     class="btn btn-primary btn-sm"
-                                    ) Sửa
+                                ) Sửa
                                 a(
                                     href=`${prefixAdmin}/products/detail/${item.id}`,
                                     class="btn btn-primary btn-sm m-4"
-                                    ) Chi tiết
+                                ) Chi tiết
                                 button(
                                     class="btn btn-danger btn-sm ml-1"
                                     button-delete
-                                    data-id = item.id
-                                    ) Xóa
-                                                                 
-                    //- tr
-                    //-     td 2
-                    //-     td 
-                    //-         img(
-                    //-             src="https://i.dummyjson.com/data/products/1/thumbnail.jpg",
-                    //-              alt="Sản phẩm"
-                    //-              width="100px"
-                    //-              height="auto"
-                    //-             )
-                    //-     td Sản phẩm 2
-                    //-     td 200.000đ
-                    //-     td 
-                    //-         a(href="#" class="badge badge-danger") Dừng hoạt động
-                    //-     td 
-                    //-         button(class="btn btn-warning btn-sm") Sửa
-                    //-         button(class="btn btn-danger btn-sm ml-1") Xóa
+                                    data-id=item.id
+                                ) Xóa
+
     +pagination(pagination)
-    //- nav
-    //-     ul.pagination
-    //-         if(pagination.currentPage > 1)
-    //-             li.page-item
-    //-                 button(
-    //-                     class="page-link"
-    //-                     button-pagination=pagination.currentPage - 1
-    //-                 ) Trang trước
-    //-         //- div #{pagination.totalPage}
-    //-         - for (var i = 1; i <= pagination.totalPage; i++)
-    //-             li(class=`page-item ${pagination.currentPage == i ? "active" : ""}` )
-    //-                 button(
-    //-                     class="page-link"
-    //-                     button-pagination=i
-    //-                 ) #{i}
-    //-         if(pagination.currentPage < pagination.totalPage)
-    //-             li.page-item
-    //-                 button(
-    //-                     class="page-link"
-    //-                         button-pagination=pagination.currentPage + 1
-    //-                 ) Trang sau    
-    //- tạo form giả
+
+    // Tạo form giả để xử lý trạng thái
     form(
         action=""
         method="POST"
@@ -153,12 +118,12 @@ block main
         data-path=`${prefixAdmin}/products/change-status`
     )
 
+    // Tạo form để xử lý xóa
     form(
         action=""
         method="POST"
         id="form-change-delete"
         data-path=`${prefixAdmin}/products/delete`
     )
-    
 
     script(src="/admin/js/products.js")
