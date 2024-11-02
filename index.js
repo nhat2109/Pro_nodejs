@@ -1,7 +1,9 @@
 // khai báo để sử dung express với thư viên express() đã được tạo lập sẵn và được gắn vào biến app npm i express
 const express = require('express');
+// khai bao thư viện cho việc thay đổi màu chữ , chữ nghiêng ở textarea
+const path = require('path');
 // khai báo thư viện body-parser để parse dữ liệu post
-var methodOverride = require('method-override');
+const methodOverride = require('method-override');
 // sử dụng env để bảo mật npm i dotenv
 require('dotenv').config();
 // thư viện thông báo
@@ -44,6 +46,11 @@ app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(session({ cookie: { maxAge: 60000 }}));
 app.use(flash());
 // End flash
+//TinyMCE
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+//End TinyMCE
+
+
 // Router
 route(app);
 routeAdmin(app);

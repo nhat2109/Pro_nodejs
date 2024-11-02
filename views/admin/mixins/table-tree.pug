@@ -1,0 +1,59 @@
+mixin table-tree(items, level = 1)
+    each item, index in items
+        - const prefix = Array(level + 1).join("-- ")
+        tr
+            td
+                input(
+                    type="checkbox"
+                    name="id"
+                    value=item.id
+                )
+            td #{item.index}
+            td
+                img(
+                    src=item.thumbnail
+                    alt=item.title
+                    width="100px"
+                    height="auto"
+                )
+            td #{prefix}#{item.title}
+            td
+                input(
+                    type="number"
+                    name="position"
+                    value=item.position
+                )
+            td 
+                if item.status == "active"
+                    a(
+                        href="javascript:;"
+                        button-change-status
+                        data-id=item.id
+                        data-status=item.status
+                        class="badge badge-success"
+                    ) Hoạt động
+                else
+                    a(
+                        href="javascript:;" 
+                        button-change-status
+                        data-id=item.id
+                        data-status=item.status
+                        class="badge badge-danger"
+                    ) Không hoạt động
+            td 
+                a(
+                    href=`${prefixAdmin}/products-category/edit/${item.id}`
+                    class="btn btn-primary btn-sm"
+                ) Sửa
+                a(
+                    href=`${prefixAdmin}/products-category/detail/${item.id}`
+                    class="btn btn-primary btn-sm m-4"
+                ) Chi tiết
+                button(
+                    class="btn btn-danger btn-sm ml-1"
+                    button-delete
+                    data-id=item.id
+                ) Xóa
+        // Gọi đệ quy cho các danh mục con, nếu có
+        if item.children && item.children.length > 0
+            +table-tree(item.children, level + 1)
