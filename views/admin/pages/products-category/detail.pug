@@ -1,0 +1,33 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
+
+block main
+    if (data.title)
+        h1.mb-4 #{data.title}
+    // Hiển thị thông tin danh mục cha
+    div.form-group
+        if data.parent_id
+            - const parentCategory = records.find(item => String(item.id) === String(data.parent_id))
+            label(for="parent_id") Danh mục cha: 
+            if parentCategory
+                |  #{parentCategory.title}
+            else
+                | Không tìm thấy danh mục cha
+        else
+            label(for="parent_id") Danh mục cha: Không có danh mục cha
+
+    if (data.position)
+        div.mb-4 Vị trí: <b>#{data.position}</b>
+
+    if (data.thumbnail)
+        div.mb-4
+            img(src=data.thumbnail, style="width: 150px;")
+
+    if (data.description)
+        div.mb-4 Mô tả: !{data.description}
+
+    a.btn.btn-primary.btn-sm(href=`${prefixAdmin}/products-category/edit/${data.id}`)
+        | Chỉnh sửa
+
+    script(src="admin/js/product.js")

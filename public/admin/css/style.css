@@ -44,32 +44,48 @@ body .main{
 }
 
 
-/*Show alert*/
-[show-alert] 
-{
+/* Show alert */
+[show-alert] {
     position: fixed;
-    /* top: 70px; */
+    top: 20px; /* Điều chỉnh vị trí từ trên xuống, có thể thay đổi nếu cần */
     right: 15px;
-    width: 400px;
+    width: auto;
+    max-width: 400px;
+    padding: 10px 15px;
     z-index: 9990;
+    background-color: #f8d7da; /* màu nền cho cảnh báo */
+    color: #721c24; /* màu chữ cho cảnh báo */
+    border: 1px solid #f5c6cb; /* viền cho cảnh báo */
+    border-radius: 5px;
+    font-size: 14px; /* cỡ chữ */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px; /* khoảng cách giữa icon đóng và nội dung */
 }
+
+/* Ẩn alert với animation */
 [show-alert].alert-hidden {
     animation-name: alert-hidden;
     animation-duration: 0.5s;
-    animation-fill-mode:both;
+    animation-fill-mode: both;
 }
+
+/* Keyframes cho animation ẩn */
 @keyframes alert-hidden {
-    form{
+    from {
         right: 15px;
+        opacity: 1;
     }
     to {
         right: -100%;
-        display: none;
+        opacity: 0;
     }
 }
-[show-alert] [close-alert]
-{
-    background: #ffffc4;
+
+/* Button close alert */
+[show-alert] [close-alert] {
+    background: #ffffff;
     display: inline-block;
     width: 24px;
     height: 24px;
@@ -78,8 +94,14 @@ body .main{
     font-weight: 600;
     border-radius: 50%;
     cursor: pointer;
+    color: #721c24;
+    transition: background 0.3s;
 }
-/*End Show alert*/
+
+[show-alert] [close-alert]:hover {
+    background: #f5c6cb; /* màu khi hover */
+}
+
 
 /*Image preview*/
 .image-preview{

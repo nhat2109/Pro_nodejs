@@ -7,6 +7,7 @@ const dashboardRouter = require('./dashboard.router.js');
 const productRouter = require('./product.router.js');
 const recycleBinRouter = require('./recycleBin.router.js');
 const productCategoryRouter = require('./products-category.router.js');
+const roleRouter = require('./role.router.js');
 module.exports = (app) => { 
     const PATH_ADMIN = systemConfig.prefixAdmin;
     // url => trống 
@@ -14,5 +15,6 @@ module.exports = (app) => {
     app.use(PATH_ADMIN + '/products', productRouter);
     app.use(PATH_ADMIN + '/recycleBin', recycleBinRouter);
     app.use(PATH_ADMIN + '/products-category', productCategoryRouter);
+    app.use(PATH_ADMIN + '/roles', roleRouter);
     
 }

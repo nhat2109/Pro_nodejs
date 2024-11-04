@@ -54,6 +54,7 @@ mixin table-tree(items, level = 1)
                     button-delete
                     data-id=item.id
                 ) Xóa
+            // Tạo form để xử lý xóa
         // Gọi đệ quy cho các danh mục con, nếu có
         if item.children && item.children.length > 0
             +table-tree(item.children, level + 1)

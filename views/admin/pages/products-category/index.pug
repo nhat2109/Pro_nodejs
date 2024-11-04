@@ -29,3 +29,9 @@ block main
                         th Hành động
                 tbody
                     +table-tree(records)
+    form(
+        action=""
+        method="POST"
+        id="form-change-delete"
+        data-path=`${prefixAdmin}/products-category/delete`
+    )

@@ -1,10 +1,12 @@
 const Product = require('../../models/product.model');
 const systemConfig = require('../../config/system');
+const ProductCategory = require('../../models/product-category.model');
 // [GET] /admin/products
 // export hàm xử lí ra home.router.js
 const fillterStatusHelper = require('../../helpers/fillterStatus');
 const searchHelper = require('../../helpers/search');
 const paginationHelper = require('../../helpers/pagination');
+const createTreeHelper = require('../../helpers/createTree');
 module.exports.index = async (req, res) =>{
     const fillterStatus= fillterStatusHelper(req.query);
     // khi truyền params ở trên url ?status=active 
@@ -173,9 +175,15 @@ module.exports.deleteItem = async (req, res) => {
 
 // [GET] /admin/products/create
 module.exports.create = async (req, res) => {
+    let find = {
+        deleted: false
+    };
+    const category = await ProductCategory.find(find);
+    const newCategory = createTreeHelper.tree(category);
    res.render("admin/pages/products/create", 
     {
        pageTitle: "Thêm mới sản phẩm", 
+       category: newCategory,
     });
 }
 // end delete item
@@ -221,10 +229,15 @@ module.exports.edit = async (req, res) => {
     // lấy đc tt sp đó với id đó
     const product = await Product.findOne(find);
     // console.log(product);
+    const category = await ProductCategory.find({
+        deleted: false,
+    });
+    const newCategory = createTreeHelper.tree(category);
     res.render("admin/pages/products/edit", 
      {
         product: product,  // trả về dữ liệu của product vào biến product cho view edit
         pageTitle: "Chỉnh sửa sản phẩm", 
+        category: newCategory,  // trả về dữ liệu của category vào biến category cho view edit
      });
    }catch(error){
         req.redirect(`${systemConfig.prefixAdmin}/products`);

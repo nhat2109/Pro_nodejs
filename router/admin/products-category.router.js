@@ -13,4 +13,13 @@ router.post('/create',
     validate.createPost,
     controller.createPost
 );
+router.get('/edit/:id', controller.edit);
+router.patch('/edit/:id',
+    upload.single("thumbnail"),
+    uploadCloud.upload,
+    validate.createPost,
+    controller.editPatch,
+);
+router.delete('/delete/:id', controller.deleteItem);
+router.get('/detail/:id', controller.detail);
 module.exports = router;

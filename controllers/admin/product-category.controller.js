@@ -57,3 +57,69 @@ module.exports.index = async (req, res) => {
   res.redirect(`${systemConfig.prefixAdmin}/products-category`);
 
 };
+// [GET /products-category/edit/:id
+module.exports.edit = async (req, res) => {
+  try{
+    const id = req.params.id;
+  const data = await ProductCategory.findOne({
+    _id: id,
+    deleted: false,
+  });
+  const records = await ProductCategory.find({
+    deleted: false,
+  });
+  const newRecords = createTreeHelper.tree(records);
+  // console.log(data);
+    res.render('admin/pages/products-category/edit', {
+      pageTitle: 'Sửa danh mục sản phẩm',
+      data: data,
+      records: newRecords,
+    });
+  }catch(e)
+  {
+    res.redirect(`${systemConfig.prefixAdmin}/products-category`)
+  }
+};
+ // [GET] /admin/products-category/edit/:id
+ module.exports.editPatch = async (req, res) => {
+  const id = req.params.id;
+  req.body.position = parseInt(req.body.position);
+  await ProductCategory.updateOne({
+    _id: id,
+  }, req.body);
+  res.redirect('back');
+};
+
+ // [GET] /admin/products-category/detail/:id
+ module.exports.detail = async (req, res) => {
+  const id = req.params.id;
+  const data = await ProductCategory.findOne({
+    _id: id,
+    deleted: false,
+  });
+  const records = await ProductCategory.find({
+    deleted: false,
+  });
+  const newRecords = createTreeHelper.tree(records);
+
+  res.render('admin/pages/products-category/detail', {
+    pageTitle: 'Chi tiết danh mục sản phẩm',
+    data: data,
+    records: newRecords,
+  });
+};
+
+// [DELETE] /admin/products-category/delete/:id
+module.exports.deleteItem = async (req, res) => {
+  const id = req.params.id;
+  await ProductCategory.updateOne(
+      {_id: id}
+      ,{
+          deleted: true,
+          deletedAt: new Date()
+      }); 
+  req.flash("success", `Đã xóa thành công sản phẩm`);
+  // console.log(req.params);
+  res.redirect("back");
+}
+// end delete item
