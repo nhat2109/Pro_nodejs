@@ -13,3 +13,5 @@ block main
                 | <b> #{permissionLabels[permission] || permission} </b>
                 if index != data.permissions.length - 1
                     | , 
+    a.btn.btn-primary.btn-sm(href=`${prefixAdmin}/roles/edit/${data.id}`)
+        | Chỉnh sửa

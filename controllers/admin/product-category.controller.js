@@ -123,3 +123,35 @@ module.exports.deleteItem = async (req, res) => {
   res.redirect("back");
 }
 // end delete item
+
+
+//[PATCH] /change-status/:status/:id
+// dùng async await để update lại 
+module.exports.changeStatus = async (req, res) => {
+    const status = req.params.status;
+    const id = req.params.id;
+
+    await Product.updateOne({_id: id}, {status: status}); 
+    // console.log(req.params);
+    res.redirect("back");
+}
+//[PATCH] /change-multi
+// dùng async await để update lại 
+module.exports.changeMulti = async (req, res) => {  
+    const type = req.body.type;
+    const ids = req.body.ids.split(', ');
+    switch (type) {
+        case 'active':
+            // await để sd cho mongodb trả về nhiều id cùng lúc nếu type là ative thì tất cả active
+            await Product.updateMany({_id: { $in: ids }}, { status: 'active' });
+            break;
+        case 'inactive': // ngược lại 
+            await Product.updateMany({_id: { $in: ids }}, { status: 'inactive' });
+            break;
+        default:
+            break;
+    }
+    // khi submit thì về trang nguyên bản 
+    res.redirect("back");
+
+}
