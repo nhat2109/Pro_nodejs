@@ -1,5 +1,6 @@
 const Role = require("../../models/role.model");
 const systemConfig = require("../../config/system");
+const permissionLabels = require("../../utils/permissionLabels");
 // export hàm xử lí ra home.router.js
 // [GET] /admin/role/index
 module.exports.index = async (req, res) =>{
@@ -58,3 +59,57 @@ module.exports.editPatch = async (req, res) =>{
     }
     res.redirect("back");
 }
+
+// [DELETE] /admin/roles/delete/:id
+module.exports.deleteItem = async (req, res) => {
+    const id = req.params.id;
+    await Role.updateOne(
+        {_id: id}
+        ,{
+            deleted: true,
+            deletedAt: new Date()
+        }); 
+    req.flash("success", `Đã xóa thành công sản phẩm`);
+    // console.log(req.params);
+    res.redirect("back");
+  }
+// end delete item
+// [GET] /admin/roles/detail
+module.exports.detail = async (req, res) => {
+    const id = req.params.id;
+    let find = {
+        _id: id,
+        deleted: false
+    };
+    const data = await Role.findOne(find);
+    // console.log(data);
+    res.render("admin/pages/roles/detail",{
+        pageTitle: "Chi tiết nhóm quyền",
+        data: data,
+        permissionLabels: permissionLabels
+    });
+}
+// [GET] /admin/roles/permissions
+module.exports.permissions = async (req, res) => {
+    let find ={
+        deleted: false
+    };
+    const records = await Role.find(find);
+    res.render("admin/pages/roles/permissions", {
+        pageTitle: "Phân quyền",
+        records: records
+    });
+}
+
+// [PATCH] /admin/roles/permissions
+module.exports.permissionsPatch = async (req, res) => {
+   const permissions = JSON.parse(req.body.permissions);
+   for(const item of permissions) {
+    await Role.updateOne({_id: item.id}, {
+        permissions: item.permission
+    });
+   }
+   req.flash("success", "Cập nhật phân quyền thành công");
+   res.redirect("back");
+}
+

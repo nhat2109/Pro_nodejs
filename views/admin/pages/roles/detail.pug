@@ -1,0 +1,15 @@
+extends ../../layouts/default.pug
+
+block main
+    h1(class="mb-4") Chi tiết nhóm quyền
+    if data.title
+        div.mb-4 Tiêu đề: <b>#{data.title}</b>
+    if data.description
+        div.mb-4 Mô tả: <b>!{data.description}</b>
+    if data.permissions
+        div.mb-4
+            | Quyền: 
+            each permission, index in data.permissions
+                | <b> #{permissionLabels[permission] || permission} </b>
+                if index != data.permissions.length - 1
+                    | , 

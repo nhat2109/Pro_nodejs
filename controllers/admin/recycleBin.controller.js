@@ -129,7 +129,7 @@ module.exports.deleteItem = async (req, res) => {
 // restore item 
 module.exports.restoreItem = async (req, res) => {
     const id = req.params.id;
-    console.log(id);
+    // console.log(id);
     await Product.updateOne(
         {_id: id}
         ,{
