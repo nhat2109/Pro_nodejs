@@ -24,36 +24,43 @@ mixin table-tree(items, level = 1)
                     value=item.position
                 )
             td 
-                if item.status == "active"
-                    a(
-                        href="javascript:;"
-                        button-change-status
-                        data-id=item.id
-                        data-status=item.status
-                        class="badge badge-success"
-                    ) Hoạt động
-                else
-                    a(
-                        href="javascript:;" 
-                        button-change-status
-                        data-id=item.id
-                        data-status=item.status
-                        class="badge badge-danger"
-                    ) Không hoạt động
+                if(role.permissions.includes("products-category_edit"))
+                    if item.status == "active"
+                        a(
+                            href="javascript:;"
+                            button-change-status
+                            data-id=item.id
+                            data-status=item.status
+                            class="badge badge-success"
+                        ) Hoạt động
+                    else
+                        a(
+                            href="javascript:;" 
+                            button-change-status
+                            data-id=item.id
+                            data-status=item.status
+                            class="badge badge-danger"
+                        ) Không hoạt động
             td 
-                a(
-                    href=`${prefixAdmin}/products-category/edit/${item.id}`
-                    class="btn btn-primary btn-sm"
-                ) Sửa
+                if(role.permissions.includes("products-category_edit"))
+                    a(
+                        href=`${prefixAdmin}/products-category/edit/${item.id}`
+                        class="btn btn-primary btn-sm"
+                    ) Sửa
+                else 
+                    span(
+                        class="btn btn-primary btn-sm"
+                    ) Sửa
                 a(
                     href=`${prefixAdmin}/products-category/detail/${item.id}`
                     class="btn btn-primary btn-sm m-4"
                 ) Chi tiết
-                button(
-                    class="btn btn-danger btn-sm ml-1"
-                    button-delete
-                    data-id=item.id
-                ) Xóa
+                if(role.permissions.includes("products-category_delete")) 
+                    button(
+                        class="btn btn-danger btn-sm ml-1"
+                        button-delete
+                        data-id=item.id
+                    ) Xóa
             // Tạo form để xử lý xóa
         // Gọi đệ quy cho các danh mục con, nếu có
         if item.children && item.children.length > 0

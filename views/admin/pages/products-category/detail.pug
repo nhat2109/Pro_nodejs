@@ -27,7 +27,11 @@ block main
     if (data.description)
         div.mb-4 Mô tả: !{data.description}
 
-    a.btn.btn-primary.btn-sm(href=`${prefixAdmin}/products-category/edit/${data.id}`)
-        | Chỉnh sửa
+    if(role.permissions.includes("products-category_edit"))
+        a.btn.btn-primary.btn-sm(href=`${prefixAdmin}/products-category/edit/${data.id}`)
+            | Chỉnh sửa
+    else 
+        a.btn.btn-primary.btn-sm 
+            | Chỉnh sửa
 
     script(src="admin/js/product.js")
