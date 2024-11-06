@@ -3,6 +3,7 @@ const systemConfig = require("../../config/system")
 // sử dụng module.exports để xuất file khi require ở file chính cũng như file khác 
 // truyền biến app vào để sd tại vì app đc khai báo bên index.js dc gọi thôi
 // đường link trên URL
+const authMiddleware = require('../../middlewares/admin/auth.middleware');
 const dashboardRouter = require('./dashboard.router.js');
 const productRouter = require('./product.router.js');
 const recycleBinRouter = require('./recycleBin.router.js');
@@ -14,12 +15,16 @@ const authRouter = require('./auth.router.js');
 module.exports = (app) => { 
     const PATH_ADMIN = systemConfig.prefixAdmin;
     // url => trống 
-    app.use(PATH_ADMIN + '/dashboard', dashboardRouter);
-    app.use(PATH_ADMIN + '/products', productRouter);
-    app.use(PATH_ADMIN + '/recycleBin', recycleBinRouter);
-    app.use(PATH_ADMIN + '/products-category', productCategoryRouter);
-    app.use(PATH_ADMIN + '/roles', roleRouter);
-    app.use(PATH_ADMIN + '/accounts', accountRouter);
+    app.use(
+        PATH_ADMIN + '/dashboard',
+        authMiddleware.requireAuth,
+        dashboardRouter
+    );
+    app.use(PATH_ADMIN + '/products',authMiddleware.requireAuth, productRouter);
+    app.use(PATH_ADMIN + '/recycleBin',authMiddleware.requireAuth, recycleBinRouter);
+    app.use(PATH_ADMIN + '/products-category',authMiddleware.requireAuth, productCategoryRouter);
+    app.use(PATH_ADMIN + '/roles',authMiddleware.requireAuth, roleRouter);
+    app.use(PATH_ADMIN + '/accounts',authMiddleware.requireAuth, accountRouter);
     app.use(PATH_ADMIN + '/auth', authRouter);
     
 }
