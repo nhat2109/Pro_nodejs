@@ -13,6 +13,10 @@ const recycleBinSchema = new mongoose.Schema({
     position: Number,
     deleted: Boolean,
     deletedAt: Date,
+    deletedBy: {
+        account_id: String,
+        deletedAt: Date
+    },
 });
 
 const RecycleBin = mongoose.model("RecycleBin", recycleBinSchema, "products");

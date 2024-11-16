@@ -1,4 +1,5 @@
 extends ../../layouts/default.pug
+include ../../mixins/moment.pug
 block main
     if(role.permissions.includes("accounts_view"))
         h1(class="mb-4") Danh sách tài khoản 
@@ -8,11 +9,11 @@ block main
                 .row 
                     .col-8 
                     .col-4.text-right 
-                    if(role.permissions.includes("accounts_create"))
-                        a(
-                            href=`${prefixAdmin}/accounts/create`
-                            class="btn btn-outline-success" 
-                        ) + Thêm mới
+                        if(role.permissions.includes("accounts_create"))
+                            a(
+                                href=`${prefixAdmin}/accounts/create`
+                                class="btn btn-outline-success" 
+                            ) + Thêm mới
                 table( 
                     class="table table-sm table-hover"
                 )
@@ -24,6 +25,8 @@ block main
                             th Phân quyền
                             th Email 
                             th Trạng thái
+                            th Người tạo
+                            th Người cập nhật
                             th Hành động
                     tbody 
                         each item, index in records
@@ -52,6 +55,16 @@ block main
                                             class="badge badge-success"
                                             data-status="inactive"
                                         ) Dừng hoạt động
+                                td 
+                                    p #{item.accountFullName}
+                                    p 
+                                        +formatDateTime(item.createdBy.createdAt)
+                                td
+                                    - const updatedBy = item.updatedBy.slice(-1)[0];
+                                    if(updatedBy)
+                                        p #{updatedBy.accountFullName}
+                                        p 
+                                            +formatDateTime(updatedBy.updatedAt)
                                 td 
                                     if(role.permissions.includes("accounts_edit"))
                                         a(

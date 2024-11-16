@@ -5,6 +5,7 @@ include ../../mixins/pagination.pug
 include ../../mixins/form-change-multi.pug 
 include ../../mixins/alert.pug
 include ../../mixins/sort.pug
+include ../../mixins/moment.pug
 
 block main 
     if(role.permissions.includes("products_view"))
@@ -51,6 +52,8 @@ block main
                             th Giá
                             th Vị trí
                             th Trạng thái
+                            th Người tạo
+                            th Người cập nhật
                             th Hành động
                     tbody 
                         each item, index in products
@@ -96,7 +99,17 @@ block main
                                                 data-id=item.id
                                                 data-status=item.status
                                                 class="badge badge-danger"
-                                            ) Không hoạt động
+                                            ) Dừng hoạt động
+                                td 
+                                    p #{item.accountFullName}
+                                    p 
+                                        +formatDateTime(item.createdBy.createdAt)
+                                td 
+                                    - const updatedBy = item.updatedBy.slice(-1)[0];
+                                    if(updatedBy)
+                                        p #{updatedBy.accountFullName}
+                                        p 
+                                             +formatDateTime(updatedBy.updatedAt)
                                 td 
                                     if(role.permissions.includes("products_edit"))
                                         a(

@@ -4,6 +4,7 @@ const Product = require('../../models/recycleBin.model');
 const fillterStatusHelper = require('../../helpers/fillterStatus');
 const searchHelper = require('../../helpers/search');
 const paginationHelper = require('../../helpers/pagination');
+const Account = require('../../models/account.model');
 module.exports.index = async (req, res) =>{
     const fillterStatus= fillterStatusHelper(req.query);
     // khi truyền params ở trên url ?status=active 
@@ -70,6 +71,15 @@ module.exports.index = async (req, res) =>{
     // limit: số lượng sản phẩm trả về
     // skip: số lượng sản phẩm bỏ qua để trả về sản phẩm tiếp theo (tính từ 0)
     const products = await Product.find(find).limit(objectPagination.limitItems).skip(objectPagination.skip);
+    // Lấy tên tài khoản người tạo sản phẩm
+    for (const product of products) {
+        const user = await Account.findOne({
+            _id: product.deletedBy.account_id,
+        });
+        if(user) {
+            product.accountFullName = user.fullName;
+        }
+    }
     // console.log(products)
     res.render("admin/pages/recycleBin/index", {
         pageTitle: "Danh sách sản phẩm", 

@@ -1,19 +1,67 @@
 const ProductCategory = require('../../models/product-category.model')
 const systemConfig = require('../../config/system');
 const createTreeHelper = require('../../helpers/createTree');
+const fillterStatusHelper = require('../../helpers/fillterStatus');
+const searchHelper = require('../../helpers/search');
+const Account = require('../../models/account.model');
  // [GET] /admin/products-category
 module.exports.index = async (req, res) => {
+  const fillterStatus = fillterStatusHelper(req.query);
   let find = {
     deleted: false,
   };
+  const objectSearch = searchHelper(req.query);
+  if(req.query.status){
+    find.status = req.query.status;
+  }
+  if(objectSearch.regex){
+    find.title = objectSearch.regex;
+  }
  
-  const records = await ProductCategory.find(find);
-  const newRecords = createTreeHelper.tree(records);
+  const countProducts = await ProductCategory.countDocuments(find);
+  // console.log(countProducts);
+    // let objectPagination = paginationHelper(
+    //     {
+    //         currentPage: 1,
+    //         limitItems: 4
+    //     },
+    //     req.query,
+    //     countProducts
+    // );
+  //Sort  
+  let sort ={};
+  if(req.query.sortKey && req.query.sortValue){
+      sort[req.query.sortKey] = req.query.sortValue;
+  }else{
+      sort.position= "desc";
+  }
+  const products_category = await ProductCategory.find(find);
+  const newRecords = createTreeHelper.tree(products_category);
   // console.log(newRecords);
+  // Lấy tên tài khoản người tạo sản phẩm
+  for (const product_category of products_category) {
+    const user = await Account.findOne({
+        _id: product_category.createdBy.account_id,
+    });
+    if(user) {
+      product_category.accountFullName = user.fullName;
+    }
+    // Lấy thông tin người cập nhật gần nhất
+    const updatedBy = product_category.updatedBy.slice(-1)[0];
+    if(updatedBy){
+        const userUpdated = await Account.findOne({
+            _id: updatedBy.account_id,
+        });
+        updatedBy.accountFullName = userUpdated.fullName;
+    }
+}
   res.render("admin/pages/products-category/index", 
   {
     pageTitle: "Danh mục sản phẩm",
     records: newRecords,
+    fillterStatus: fillterStatus, // trả dữ liệu ra ...
+    keyword:objectSearch.keyword,
+    // pagination: objectPagination, 
   });
 };
 
@@ -23,6 +71,7 @@ module.exports.index = async (req, res) => {
   let find = {
     deleted: false,
   };
+  
   const records = await ProductCategory.find(find);
   const newRecords = createTreeHelper.tree(records);
   res.render("admin/pages/products-category/create", 
@@ -52,6 +101,9 @@ module.exports.index = async (req, res) => {
   } else {
       req.body.position = parseInt(req.body.position);
   }
+  req.body.createdBy = {
+    account_id: res.locals.user.id
+};
   const record = new ProductCategory(req.body);
   await record.save();
   res.redirect(`${systemConfig.prefixAdmin}/products-category`);
@@ -84,9 +136,21 @@ module.exports.edit = async (req, res) => {
  module.exports.editPatch = async (req, res) => {
   const id = req.params.id;
   req.body.position = parseInt(req.body.position);
-  await ProductCategory.updateOne({
-    _id: id,
-  }, req.body);
+  try{
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date()
+    }
+    await ProductCategory.updateOne({_id: id,}, {
+      ...req.body,
+      $push: {updatedBy: updatedBy}
+    });
+    req.flash("success", `Đã sửa thành công danh mục sản phẩm`);
+  } catch(err){
+    req.flash("error", `Cập nhật thất bại`)
+  }
+
+  
   res.redirect('back');
 };
 
@@ -130,8 +194,14 @@ module.exports.deleteItem = async (req, res) => {
 module.exports.changeStatus = async (req, res) => {
     const status = req.params.status;
     const id = req.params.id;
-
-    await Product.updateOne({_id: id}, {status: status}); 
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date()
+    }
+    await ProductCategory.updateOne({_id: id}, {
+      status: status,
+      $push: {updatedBy: updatedBy}
+    }); 
     // console.log(req.params);
     res.redirect("back");
 }
@@ -140,13 +210,48 @@ module.exports.changeStatus = async (req, res) => {
 module.exports.changeMulti = async (req, res) => {  
     const type = req.body.type;
     const ids = req.body.ids.split(', ');
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date()
+    }
     switch (type) {
         case 'active':
             // await để sd cho mongodb trả về nhiều id cùng lúc nếu type là ative thì tất cả active
-            await Product.updateMany({_id: { $in: ids }}, { status: 'active' });
+            await ProductCategory.updateMany({_id: { $in: ids }}, {$push: {updatedBy: updatedBy}, status: 'active' });
             break;
         case 'inactive': // ngược lại 
-            await Product.updateMany({_id: { $in: ids }}, { status: 'inactive' });
+            await ProductCategory.updateMany({_id: { $in: ids }}, { $push: {updatedBy: updatedBy}, status: 'inactive' });
+            break;
+            case 'delete-all': // xóa tất cả 
+            await ProductCategory.updateMany(
+                {_id: {$in:ids}},
+                {
+                    deleted: true,
+                    deletedBy: {
+                        account_id: res.locals.user.id,
+                        deletedAt: new Date()
+                    }
+                }
+            )
+            req.flash("success", `Đã xóa thành công ${ids.length} sản phẩm`);
+            break;
+        case 'change-position': // thay đổi vị trí, sắp xếp vtri
+            for (const item of ids){
+                let[id, position] = item.split("-");
+                position = parseInt(position);
+                // console.log(id);
+                // console.log(position);
+                await ProductCategory.updateMany(
+                    {
+                        _id: {$in: id}
+                    },
+                    {
+                        position: position,
+                        $push: {updatedBy: updatedBy}
+                    }
+                );
+                req.flash('success', `Đã đổi vị trí thành công ${ids.length} sản phẩm`);
+            }
             break;
         default:
             break;

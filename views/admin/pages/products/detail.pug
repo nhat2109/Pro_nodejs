@@ -25,8 +25,8 @@ block main
                 span(class="badge badge-danger") Dừng Hoạt Động
     if (product.position)
         div(class="mb-4") Vị trí: <b>#{product.position}</b>
-    if (product.description)
-        div(class="mb-4") !{product.description}
+    if (product.description)  
+        div Mô tả: <b> !{product.description}</b>
     if(role.permissions.includes("products_edit"))
         a(
             href=`${prefixAdmin}/products/edit/${product.id}`,

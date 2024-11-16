@@ -24,8 +24,8 @@ mixin table-tree(items, level = 1)
                     value=item.position
                 )
             td 
-                if(role.permissions.includes("products-category_edit"))
-                    if item.status == "active"
+                if (role.permissions.includes("products-category_edit"))
+                    if (item.status == "active")
                         a(
                             href="javascript:;"
                             button-change-status
@@ -42,7 +42,17 @@ mixin table-tree(items, level = 1)
                             class="badge badge-danger"
                         ) Không hoạt động
             td 
-                if(role.permissions.includes("products-category_edit"))
+                p #{item.accountFullName}
+                p 
+                    +formatDateTime(item.createdBy.createdAt)
+            td 
+                - const updatedBy = item.updatedBy.slice(-1)[0];
+                if(updatedBy)
+                    p #{updatedBy.accountFullName}
+                    p 
+                        +formatDateTime(updatedBy.updatedAt)
+            td 
+                if (role.permissions.includes("products-category_edit"))
                     a(
                         href=`${prefixAdmin}/products-category/edit/${item.id}`
                         class="btn btn-primary btn-sm"
@@ -55,7 +65,7 @@ mixin table-tree(items, level = 1)
                     href=`${prefixAdmin}/products-category/detail/${item.id}`
                     class="btn btn-primary btn-sm m-4"
                 ) Chi tiết
-                if(role.permissions.includes("products-category_delete")) 
+                if (role.permissions.includes("products-category_delete")) 
                     button(
                         class="btn btn-danger btn-sm ml-1"
                         button-delete

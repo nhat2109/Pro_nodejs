@@ -10,6 +10,8 @@ require('dotenv').config();
 const flash = require('express-flash');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+// thư viện ngày giờ
+const moment = require('moment');
 // npm i mongoose
 const database = require('./config/database');
 const app = express();
@@ -57,6 +59,7 @@ routeAdmin(app);
 
 // Biến locals có thể dùng được ở các folder App Locals Variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
+app.locals.moment = moment;
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

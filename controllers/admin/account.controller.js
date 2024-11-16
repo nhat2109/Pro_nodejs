@@ -16,6 +16,22 @@ module.exports.index = async (req, res) => {
         });
         record.role = role;
     }
+    for (const product of records) {
+        const user = await Account.findOne({
+            _id: product.createdBy.account_id,
+        });
+        if(user) {
+            product.accountFullName = user.fullName;
+        }
+        // Lấy thông tin người cập nhật gần nhất
+        const updatedBy = product.updatedBy.slice(-1)[0];
+        if(updatedBy){
+            const userUpdated = await Account.findOne({
+                _id: updatedBy.account_id,
+            });
+            updatedBy.accountFullName = userUpdated.fullName;
+        }
+    }
     res.render('admin/pages/accounts/index', {
         pageTitle: 'Danh sách tài khoản',
         records: records,
@@ -42,6 +58,9 @@ module.exports.createPost = async (req, res) => {
         res.redirect('back');
     }else
     {
+        req.body.createdBy = {
+            account_id: res.locals.user.id
+        };
         req.body.password = md5(req.body.password);
         const record = new Account(req.body);
         await record.save();
@@ -78,6 +97,7 @@ module.exports.editPatch = async (req, res) => {
         email: req.body.email,
         deleted: false,
     });
+    
     if (emailExist) {
         req.flash('error', `Email ${req.body.email} đã tồn tại`);
         res.redirect('back');
@@ -87,8 +107,14 @@ module.exports.editPatch = async (req, res) => {
         }else{
             delete req.body.password;
         }
-            
-        await Account.updateOne({_id: id,}, req.body);
+        const updatedBy = {
+            account_id: res.locals.user.id,
+            updatedAt: new Date()
+        }
+        await Account.updateOne({_id: id,}, {
+            ...req.body,
+            $push: {updatedBy: updatedBy}
+        });
         req.flash("success", "Cập nhật tài khoản thành công!");
     }
 

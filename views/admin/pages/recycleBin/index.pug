@@ -3,7 +3,7 @@ include ../../mixins/fillter-status.pug
 include ../../mixins/search.pug 
 include ../../mixins/pagination.pug 
 include ../../mixins/form-change-multi.pug 
-
+include ../../mixins/moment.pug
 
 block main 
     h1 Danh sách sản phẩm đã xóa
@@ -33,6 +33,7 @@ block main
                         th Tiêu đề
                         th Giá
                         th Trạng thái
+                        th Người xóa
                         th Hành động
                 tbody 
                     each item, index in products
@@ -70,7 +71,11 @@ block main
                                         data-id = item.id
                                         data-status = item.status
                                         class="badge badge-danger"
-                                        ) Không hoạt động
+                                        ) Dừng hoạt động
+                            td
+                                p #{item.accountFullName}
+                                p 
+                                    +formatDateTime(item.deletedBy.deletedAt)
                                 //-   a(
                             //-     href="#"
                             //-     class=`badge ${item.status === "active" ? "badge-success" : "badge-danger"}`
