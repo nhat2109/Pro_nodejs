@@ -84,8 +84,8 @@ module.exports.index = async (req, res) => {
 
  // [GET] /admin/products-category/create
  module.exports.createPost = async (req, res) => {
- 
-  // lấy vị trí còn trống 
+ if(Permissions.includes("products-category_create")){
+// lấy vị trí còn trống 
   if (req.body.position == "") {
     const countProducts = await ProductCategory.countDocuments();
     let newPosition = countProducts + 1;
@@ -103,10 +103,15 @@ module.exports.index = async (req, res) => {
   }
   req.body.createdBy = {
     account_id: res.locals.user.id
-};
+  };
   const record = new ProductCategory(req.body);
   await record.save();
   res.redirect(`${systemConfig.prefixAdmin}/products-category`);
+}else{
+  res.send("403");
+  return;
+}
+  
 
 };
 // [GET /products-category/edit/:id
