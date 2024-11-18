@@ -19,7 +19,7 @@ module.exports.index = async (req, res) => {
         }
     }
     cart.totalPrice = cart.products.reduce((sum, item) => sum + item.totalPrice, 0)
-    console.log(cart);
+    // console.log(cart);
     res.render("client/pages/cart/index",{
         pageTitle: "Giỏ hàng",
         cartDetail: cart
@@ -40,7 +40,7 @@ module.exports.addPost = async (req, res) =>{
     // console.log(existProductInCart);
     if(existProductInCart){
         const quantityNew = quantity + existProductInCart.quantity;
-        console.log(quantityNew);
+        // console.log(quantityNew);
         await Cart.updateOne(
             {
                 _id: cartId,
