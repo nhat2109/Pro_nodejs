@@ -1,0 +1,21 @@
+//- Kế thừa header và footer của layout chung
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+
+block main
+    .container.my-3
+        .row
+            .col-12
+                //- +box-head("Thông tin tài khoản")
+                .card
+                    .card-body
+                        h5.card-title.text-center.mb-4 #{pageTitle}
+                        dl.row
+                            dt.col-sm-4 Tên
+                            dd.col-sm-8 #{user.fullName}
+                            dt.col-sm-4 Email
+                            dd.col-sm-8 #{user.email}
+                            dt.col-sm-4 Token User
+                            dd.col-sm-8
+                                code #{user.tokenUser}
