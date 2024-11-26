@@ -1,6 +1,7 @@
 const categoryMiddleware = require('../../middlewares/client/category.middleware');
 const cartMiddleware = require('../../middlewares/client/cart.middleware');
 const userMiddleware = require('../../middlewares/client/user.middleware');
+const settingMiddleware = require('../../middlewares/client/setting.middleware');
 // sử dụng module.exports để xuất file khi require ở file chính cũng như file khác 
 // truyền biến app vào để sd tại vì app đc khai báo bên index.js dc gọi thôi
 // đường link trên URL
@@ -16,6 +17,7 @@ module.exports = (app) => {
     app.use(categoryMiddleware.category);
     app.use(cartMiddleware.cartId);
     app.use(userMiddleware.infoUser);
+    app.use(settingMiddleware.settingGeneral);
     app.use('/', homeRouter);
     // url/products => đi vào create, edi   t
     app.use('/products', productRouter);

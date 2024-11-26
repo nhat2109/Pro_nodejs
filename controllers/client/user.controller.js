@@ -3,7 +3,7 @@ const User = require('../../models/user.model');
 const ForgotPassword = require('../../models/forgot-password.model');
 const generateHelper = require('../../helpers/generate');
 const sendMailHelper = require('../../helpers/sendMail');
-
+const Cart = require('../../models/cart.model');
 // [GET] /user/register
 module.exports.register = async (req, res) => {
     res.render("client/pages/user/register", {
@@ -64,6 +64,22 @@ module.exports.loginPost = async (req, res) => {
         res.redirect("back");
         return;
     }
+    // console.log(req.cookies.cartId);
+    // console.log(user.id);
+    const cart = await Cart.findOne({
+        user_id: user.id
+    });
+    if(cart){
+        res.cookie("cartId", cart.id);
+    } else{
+        await Cart.updateOne({
+            _id: req.cookies.cartId
+        },{
+            user_id: user.id
+        });
+    }
+    console.log(req.cookies.cartId);
+    console.log(user.id);
     res.cookie("tokenUser", user.tokenUser);
     res.redirect("/");
 }
@@ -72,6 +88,7 @@ module.exports.loginPost = async (req, res) => {
 // [GET] /user/logout
 module.exports.logout = async (req, res) => {
     res.clearCookie("tokenUser");
+    res.clearCookie("cartId");
     res.redirect("/");
 }
 
