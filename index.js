@@ -52,14 +52,20 @@ app.use(flash());
 app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 //End TinyMCE
 
+// Biến locals có thể dùng được ở các folder App Locals Variables
+app.locals.prefixAdmin = systemConfig.prefixAdmin;
+app.locals.moment = moment;
 
 // Router
 route(app);
 routeAdmin(app);
+app.get("*", (req, res)=> {
+    res.render("client/pages/errors/404",{
+        pageTitle: "404 Not Found",
+    })
+});
 
-// Biến locals có thể dùng được ở các folder App Locals Variables
-app.locals.prefixAdmin = systemConfig.prefixAdmin;
-app.locals.moment = moment;
+
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
