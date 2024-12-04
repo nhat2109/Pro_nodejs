@@ -372,3 +372,11 @@
     background: #f5c6cb; /* màu khi hover */
 }
 
+
+.inner-image {
+    text-align: center;
+}
+
+.inner-image img {
+    display: inline-block;
+}
