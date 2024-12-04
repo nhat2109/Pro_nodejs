@@ -1,5 +1,6 @@
 # PRODUCT MANAGEMENT SYSTEM FOR WINE STORE
-![Wine Store](https://res.cloudinary.com/dpt9rwzmw/image/upload/v1732635395/dlweqvmq8kvhtujytt8f.jpg)
+![Wine Store]()
+ <img src="https://res.cloudinary.com/dpt9rwzmw/image/upload/v1732635395/dlweqvmq8kvhtujytt8f.jpg" alt="image" width="40" height="40">
 ## 🛠 Introduce  
 Develop product management for wine stores, view product information, easy online shopping to facilitate product searching and purchasing
 
