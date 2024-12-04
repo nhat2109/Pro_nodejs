@@ -6,11 +6,13 @@
             if role && role.permissions && role.permissions.includes("products_view")    
                 li 
                     a(href=`${prefixAdmin}/products`) Danh sách sản phẩm
-            li 
-                a(href=`${prefixAdmin}/recycleBin`) Thùng rác
             if role && role.permissions && role.permissions.includes("products-category_view")    
                 li 
                     a(href=`${prefixAdmin}/products-category`) Danh mục sản phẩm
+            li 
+                a(href=`${prefixAdmin}/recycleBin`) Thùng rác
+            li 
+                a(href=`${prefixAdmin}/articles-category`) Danh mục bài viết
             if role && role.permissions && role.permissions.includes("roles_view")    
                 li 
                     a(href=`${prefixAdmin}/roles`) Nhóm quyền
@@ -22,3 +24,4 @@
                     a(href=`${prefixAdmin}/accounts`) Danh sách tài khoản
             li  
                 a(href=`${prefixAdmin}/settings/general`) Cài đặt chung
+            

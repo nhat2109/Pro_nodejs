@@ -22,4 +22,7 @@ router.patch(
     validate.editPatch,
     controller.editPatch
 ); 
+router.patch("/change-status/:status/:id", controller.changeStatus);
+router.get("/detail/:id", controller.detail);
+router.delete("/delete/:id", controller.deleteItem);
 module.exports = router;

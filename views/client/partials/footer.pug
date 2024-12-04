@@ -2,104 +2,42 @@ doctype html
 html  
     head  
         title Footer Example  
-        style.  
-            footer {  
-                background-color: #f5f5f5; /* Màu nền cho footer */  
-                padding: 20px;  
-                font-family: Arial, sans-serif;  
-            }  
-
-            .footer-container {  
-                display: flex; /* Sử dụng flexbox để sắp xếp thành 3 cột */  
-                justify-content: space-between; /* Căn giữa các cột */  
-                max-width: 1200px; /* Đặt chiều rộng tối đa */  
-                margin: 0 auto; /* Căn giữa footer */  
-            }  
-
-            .company-info, .about-us, .customer-support, .social-media {  
-                flex: 1; /* Tất cả các cột có cùng chiều rộng */  
-                margin: 0 10px; /* Khoảng cách giữa các cột */  
-            }  
-
-            h2, h3 {  
-                font-size: 1.5em; /* Kích thước tiêu đề */  
-                color: #333; /* Màu chữ */  
-            }  
-
-            h3 {  
-                margin-top: 15px; /* Khoảng cách trên cho tiêu đề phụ */  
-            }  
-
-            p {  
-                margin: 5px 0; /* Khoảng cách giữa các đoạn văn */  
-            }  
-
-            ul {  
-                list-style-type: none; /* Bỏ bỏ điểm đầu danh sách */  
-                padding: 0; /* Bỏ Padding */  
-            }  
-
-            ul li {  
-                margin: 5px 0; /* Khoảng cách giữa các mục trong danh sách */  
-            }  
-
-            ul li a {  
-                color: #0066cc; /* Màu liên kết */  
-                text-decoration: none; /* Bỏ gạch chân */  
-                transition: color 0.3s ease; /* Hiệu ứng chuyển màu */  
-            }  
-
-            ul li a:hover {  
-                color: #ff6600; /* Màu khi hover */  
-            }  
-
-            .social-media a {  
-                display: inline-block; /* Đặt liên kết thành dạng khối */  
-                margin-right: 10px; /* Khoảng cách giữa các liên kết mạng xã hội */  
-            }  
-
-            .footer-bottom {  
-                text-align: center; /* Căn giữa nội dung */  
-                margin-top: 20px; /* Khoảng cách trên cho footer bottom */  
-                font-size: 0.9em; /* Kích thước chữ nhỏ hơn */  
-                color: #777; /* Màu chữ nhạt */  
-            }  
     body  
-        footer  
-            .footer-container  
-                .company-info  
-                    h2 Công Ty TNHH Sản Xuất Và Thương Mại Tổng Hợp VNN
+        footer(style="background-color: #f5f5f5; padding: 20px; font-family: Arial, sans-serif;")  
+            .footer-container(style="display: flex; justify-content: space-between; max-width: 1200px; margin: 0 auto;")  
+                .company-info(style="flex: 1; margin: 0 10px;")  
+                    h2(style="font-size: 1.5em; color: #333;") Công Ty TNHH Sản Xuất Và Thương Mại Tổng Hợp VNN  
                     p Email:   
-                        a(href='mailto:phenow@gmail.com') phenow@gmail.com  
+                        a(href='mailto:phenow@gmail.com' style="color: #3d3d3d; text-decoration: none;") #{settingGeneral.email}  
                     p Số điện thoại:   
-                        a(href='tel:0704058699') 0704058699  
+                        a(href='tel:0704058699' style="color: #3d3d3d; text-decoration: none;") #{settingGeneral.phone}
                 
-                .about-us  
-                    h3 Về Phenow Beauty  
-                    ul  
-                        li: a(href='#') Câu chuyện thương hiệu  
-                        li: a(href='#') Giới thiệu về Phenow Beauty  
-                        li: a(href='#') Quy chế hoạt động Website TMĐT  
-                        li: a(href='#') Bảo mật thông tin  
-                        li: a(href='#') Tuyển dụng  
-                        li: a(href='#') Liên hệ  
+                .about-us(style="flex: 1; margin: 0 10px;")  
+                    h3(style="font-size: 1.5em; color: #333; margin-top: 15px;") Về Phenow Beauty  
+                    ul(style="list-style-type: none; padding: 0;")  
+                        li(style="margin: 5px 0;"): a(href='#' style="color: #3d3d3d; text-decoration: none;") Câu chuyện thương hiệu  
+                        li(style="margin: 5px 0;"): a(href='#' style="color: #3d3d3d; text-decoration: none;") Giới thiệu về Phenow Beauty  
+                        li(style="margin: 5px 0;"): a(href='#' style="color: #3d3d3d; text-decoration: none;") Quy chế hoạt động Website TMĐT  
+                        li(style="margin: 5px 0;"): a(href='#' style="color: #3d3d3d; text-decoration: none;") Bảo mật thông tin  
+                        li(style="margin: 5px 0;"): a(href='#' style="color: #3d3d3d; text-decoration: none;") Tuyển dụng  
+                        li(style="margin: 5px 0;"): a(href='#' style="color: #3d3d3d; text-decoration: none;") Liên hệ  
                 
-                .customer-support  
-                    h3 Hỗ Trợ Khách Hàng  
-                    ul  
-                        li: a(href='#') Hướng dẫn đặt hàng  
-                        li: a(href='#') Chính sách vận chuyển  
-                        li: a(href='#') Hướng dẫn kiểm tra đơn hàng  
-                        li: a(href='#') Hướng dẫn thanh toán  
-                        li: a(href='#') Chính sách đổi trả  
-                        li: a(href='#') Hướng dẫn đổi trả  
-                        li: a(href='#') Hướng dẫn khiếu nại & hoàn tiền  
+                .customer-support(style="flex: 1; margin: 0 10px;")  
+                    h3(style="font-size: 1.5em; color: #333; margin-top: 15px;") Hỗ Trợ Khách Hàng  
+                    ul(style="list-style-type: none; padding: 0;")  
+                        li(style="margin: 5px 0;"): a(href='#' style="color: #3d3d3d; text-decoration: none;") Hướng dẫn đặt hàng  
+                        li(style="margin: 5px 0;"): a(href='#' style="color: #3d3d3d; text-decoration: none;") Chính sách vận chuyển  
+                        li(style="margin: 5px 0;"): a(href='#' style="color: #3d3d3d; text-decoration: none;") Hướng dẫn kiểm tra đơn hàng  
+                        li(style="margin: 5px 0;"): a(href='#' style="color: #3d3d3d; text-decoration: none;") Hướng dẫn thanh toán  
+                        li(style="margin: 5px 0;"): a(href='#' style="color: #3d3d3d; text-decoration: none;") Chính sách đổi trả  
+                        li(style="margin: 5px 0;"): a(href='#' style="color: #3d3d3d; text-decoration: none;") Hướng dẫn đổi trả  
+                        li(style="margin: 5px 0;"): a(href='#' style="color: #3d3d3d; text-decoration: none;") Hướng dẫn khiếu nại & hoàn tiền  
                 
-                .social-media  
-                    h3 Kết Nối Với Chúng Tôi  
-                    a(href='#' target='_blank') Facebook  
-                    a(href='#' target='_blank') Instagram  
-                    a(href='#' target='_blank') Tiktok  
+                .social-media(style="flex: 1; margin: 0 10px;")  
+                    h3(style="font-size: 1.5em; color: #333; margin-top: 15px;") Kết Nối Với Chúng Tôi  
+                    a(href='#' target='_blank' style="display: inline-block; margin-right: 10px; color: #3d3d3d; text-decoration: none;") Facebook  
+                    a(href='#' target='_blank' style="display: inline-block; margin-right: 10px; color: #3d3d3d; text-decoration: none;") Instagram  
+                    a(href='#' target='_blank' style="display: inline-block; margin-right: 10px; color: #3d3d3d; text-decoration: none;") Tiktok  
             
-            .footer-bottom  Copyright © 2024
-                | #{settingGeneral.copyright}
+            .footer-bottom(style="text-align: center; margin-top: 20px; font-size: 0.9em; color: #777;")  
+                | Copyright © 2024 | #{settingGeneral.copyright}

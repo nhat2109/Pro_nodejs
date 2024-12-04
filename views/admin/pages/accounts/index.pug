@@ -40,20 +40,24 @@ block main
                                         height="auto"
                                     )
                                 td #{item.fullName}
-                                td #{item.role.title}
+                                td #{item.role ? item.role.title : 'Chưa có vai trò'}
                                 td #{item.email}
                                 td 
                                     if (item.status === "active")
                                         a(
                                             href="javascript:"
                                             class="badge badge-success"
-                                            data-status="active"
+                                            data-status = item.status
+                                            data-id = item.id
+                                            button-change-status
                                         ) Hoạt động
                                     else
                                         a(
                                             href="javascript:"
-                                            class="badge badge-success"
-                                            data-status="inactive"
+                                            class="badge badge-danger"
+                                            data-status=item.status
+                                            button-change-status 
+                                            data-id = item.id
                                         ) Dừng hoạt động
                                 td 
                                     p #{item.accountFullName}
@@ -78,6 +82,23 @@ block main
                                     if(role.permissions.includes("accounts_delete"))
                                         button(
                                             class="btn btn-danger btn-sm ml-1"
-                                            button-delete
+                                            button-delete-account
                                             data-id=item.id
-                                        ) Xóa
+                                    ) Xóa
+    
+    form(
+        action=""
+        method="POST"
+        id="form-change-status"
+        data-path=`${prefixAdmin}/accounts/change-status`
+    )
+    form(
+        action=""
+        method="POST"
+        id="form-account-delete"
+        data-path=`${prefixAdmin}/accounts/delete`
+    )
+
+    script(src="/admin/js/account.js")
+
+

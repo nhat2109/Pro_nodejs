@@ -12,7 +12,6 @@ const uploadCloud = require('../../middlewares/admin/uploadCloud.middleware');
 router.get('/', controller.index); // gọi ra hàm index
 router.patch('/change-status/:status/:id', controller.changeStatus); // gọi ra hàm changeStatus
 router.patch('/change-multi', controller.changeMulti); // gọi ra hàm changeStatus
-router.delete('/delete/:id', controller.deleteItem);
 router.get('/create', controller.create);
 router.post('/create', 
     upload.single("thumbnail"),
@@ -28,6 +27,6 @@ router.patch('/edit/:id',
     validate.createPost,
     controller.editPatch
 );
-
+router.delete('/delete/:id', controller.deleteItem);
 router.get('/detail/:id', controller.detail);
 module.exports = router;

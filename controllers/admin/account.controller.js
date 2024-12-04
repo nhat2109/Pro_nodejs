@@ -120,3 +120,57 @@ module.exports.editPatch = async (req, res) => {
 
     res.redirect('back');
 };
+
+// [PATCH] change-status/:status/:id
+module.exports.changeStatus = async (req, res) => {
+    // console.log(req.params);
+    const status = req.params.status;
+    const id = req.params.id;
+    // res.send(`${status} - ${id}`);
+    const updatedBy = {
+        account_id: res.locals.user.id,
+        updatedAt: new Date()
+    }
+    await Account.updateOne({_id: id}, {...req.body, status: status, $push: {updatedBy: updatedBy}});
+    res.redirect("back");
+    
+}
+
+
+
+
+
+// [GET] /accounts/details/:id
+module.exports.detail = async (req, res) => {
+    try{
+        const id = req.params.id;
+        const roles = await Role.find({
+            deleted: false,
+        });
+        const record = await Account.findOne({
+            _id: id,
+            deleted: false,
+        }).select("-password-token");
+        res.render("admin/pages/accounts/detail", {
+            pageTitle: record.title,
+            record: record,
+            roles: roles,
+        });
+    }catch(error){
+        req.redirect(`${systemConfig.prefixAdmin}/accounts`);
+   }
+};
+
+// [DELETE] /accounts/delete/:id
+module.exports.deleteItem = async (req, res) =>{
+    const id = req.params.id;
+    await Account.updateOne({_id: id}, {
+        deleted: true,
+        deletedBy: {
+            account_id: res.locals.user.id,
+            deletedAt: new Date()
+        }
+    });
+    req.flash("success", `Đã xóa thành công sản phẩm`);
+    res.redirect("back");
+}

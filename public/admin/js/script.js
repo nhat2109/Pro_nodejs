@@ -155,7 +155,7 @@ if(formChangeMulti)
 // End orm change multi
 
 
-// Delete Item
+// Delete Item product
 const buttonDelete = document.querySelectorAll("[button-delete]");
  if(buttonDelete.length > 0) {
     const formDeleteItem = document.querySelector("#form-change-delete");
@@ -163,7 +163,7 @@ const buttonDelete = document.querySelectorAll("[button-delete]");
     buttonDelete.forEach(button => {
         button.addEventListener("click", () => {   
             // console.log(button.getAttribute("data-id"));
-            const isConfirm = confirm("Bạn có chắc muốn xóa sản phẩm này không");
+            const isConfirm = confirm("Bạn có chắc muốn xóa sản phẩm này không?");
             if(isConfirm) {
                 const id = button.getAttribute("data-id");
                 // console.log(id);
@@ -176,8 +176,25 @@ const buttonDelete = document.querySelectorAll("[button-delete]");
     });
  }
 // End Delete Item
-
-
+const buttonDeleteItem = document.querySelectorAll("[button-delete-account]");
+if(buttonDeleteItem.length > 0){
+    const formDeleteItemAccount = document.querySelector("#form-account-delete");
+    const path = formDeleteItemAccount.getAttribute("data-path");
+    buttonDeleteItem.forEach(button => {
+        button.addEventListener("click", () =>{
+            const isConfirm = confirm("Bạn có chắc muốn xóa tài khoản này không?");
+            if(isConfirm) {
+                const id = button.getAttribute("data-id");
+                // console.log(id);
+                // console.log(path);
+                const action = `${path}/${id}?_method=DELETE`; // khi gửi url lên thì phải có pthuc xóa đằng sau
+                formDeleteItemAccount.action = action;
+                formDeleteItemAccount.submit();
+            }
+        });
+    });
+}
+// Delete Item account
 // Restore Item
 const buttonRestore = document.querySelectorAll("[button-restore]");
  if(buttonRestore.length > 0) {
