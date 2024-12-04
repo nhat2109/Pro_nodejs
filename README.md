@@ -3,17 +3,17 @@
 ## 🛠 Introduce  
 Develop product management for wine stores, view product information, easy online shopping to facilitate product searching and purchasing
 ## Table of Contents  
-- [Introduction](#introduction)  
-- [Technologies Used](#technologies-used)  
+- [Introduction](#introduce)  
+- [Technologies Used](#-technologies-used)  
   - [Frontend](#frontend)  
   - [Backend](#backend)  
   - [Database](#database)  
-- [Settings](#settings)  
-- [Features](#features)  
-  - [Client Features](#client-features)  
-  - [Admin Features](#admin-features)  
-- [License](#license)  
-- [Contact Me](#contact-me)
+- [Settings](#-settings)  
+- [Features](#-features)  
+  - [Client Features](#client)  
+  - [Admin Features](#admin)  
+- [License](#-license)  
+- [Contact Me](#-contact-me)
 ## 🌐 Technologies Used  
 - **Frontend**:   
   - HTML  
@@ -72,7 +72,7 @@ User guide
 + Permissions: allow access to accounts
 + Account list:thông tin tài khoản bên admin, features are edit, delete, account details
 + General settings: information displayed to clients
-## 📜 License
-
+📜 License
+  MIT License
 ## 📧 Contact Me
   dangnhat10102003@gmail.com
