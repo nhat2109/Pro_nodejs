@@ -2,7 +2,18 @@
 ![Wine Store]<img src="https://res.cloudinary.com/dpt9rwzmw/image/upload/v1732635395/dlweqvmq8kvhtujytt8f.jpg" alt="image" width="40" height="40">
 ## 🛠 Introduce  
 Develop product management for wine stores, view product information, easy online shopping to facilitate product searching and purchasing
-
+## Table of Contents  
+- [Introduction](#introduction)  
+- [Technologies Used](#technologies-used)  
+  - [Frontend](#frontend)  
+  - [Backend](#backend)  
+  - [Database](#database)  
+- [Settings](#settings)  
+- [Features](#features)  
+  - [Client Features](#client-features)  
+  - [Admin Features](#admin-features)  
+- [License](#license)  
+- [Contact Me](#contact-me)
 ## 🌐 Technologies Used  
 - **Frontend**:   
   - HTML  
@@ -22,11 +33,22 @@ Develop product management for wine stores, view product information, easy onlin
 
 ## 📚 Settings  
 **Step 1**: Clone repo
-git clone https://github.com/nhat2109/Pro_nodejs.git
+  ```bash
+    git clone https://github.com/nhat2109/Pro_nodejs.git
+  ```
+
 **Step 2**: Install dependency steps
-  npm install
+  ```bash
+    cd your-repository
+  ```
+  ```bash
+    npm install
+  ```
 User guide 
-  npm start
+  ```bash
+    npm start
+  ```
+**Open your web browser** and navigate to `http://localhost:3000`.
 ## ✨ Features
 - Client:
 + Register: Allow users to register
