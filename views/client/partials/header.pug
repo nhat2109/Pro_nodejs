@@ -1,32 +1,25 @@
 include ../mixins/sub-menu.pug
 header.header
+    
     .container
         .d-flex.justify-content-between.align-items-center
-            .inner-logo
+            .inner-logo.d-flex
                 a(href="/")
                     img(src=settingGeneral.logo, alt=settingGeneral.websiteName, width="100px", height="100px")
-            form.d-flex(
-                action="/search"
-                method="GET"
-            )            
-                input(
-                    type="text"
-                    class="form-control me-2"
-                    placeholder="Tìm kiếm sản phẩm..."
-                    name="keyword"
-                    value=keyword
-                )
-                button(type="submit" class="btn btn-primary") Tìm
-            .inner-menu
-                ul.d-flex.mb-0
-                    li.me-3
-                        a(href="/") Trang chủ
-                    li.me-3(class="sub-menu")
-                        -const pathProduct = "/products";
-                        a(href=pathProduct) Danh mục phẩm
-                            +sub-menu(layoutProductCategory, pathProduct)
-                    li
-                        a(href="/cart") Giỏ hàng (#{miniCart ? miniCart.totalQuantity : 0})
+                form.d-flex.align-items-center(
+                    action="/search"
+                    method="GET"
+                )            
+                    input(
+                        type="text"
+                        class="form-control me-2"
+                        placeholder="Tìm kiếm sản phẩm..."
+                        name="keyword"
+                        value=keyword
+                    )
+                    button(type="submit" class="btn btn-primary") Tìm
+            .inner-menu_item
+                ul 
                     if(user)
                         li
                             a(href="/user/info") #{user.fullName}
@@ -37,4 +30,22 @@ header.header
                             a(href="/user/login") Đăng nhập
                         li
                             a(href="/user/register") Đăng ký
+        .inner-menu
+            ul.d-flex.mb-0.d-flex.justify-content-between.align-items-center
+                li.me-3
+                    a(href="/") Trang chủ          
+                li.me-3
+                    a(href="/user/gift") Quà tặng
+                li.me-3
+                    a(href="/user/knowledge") Kiến thức
+                li.me-3(class="sub-menu")
+                    -const pathProduct = "/products";
+                    a(href=pathProduct) Danh mục phẩm
+                        +sub-menu(layoutProductCategory, pathProduct)
+                li.me-3
+                    a(href="/cart") Giỏ hàng (#{miniCart ? miniCart.totalQuantity : 0})
+                li.mr-3
+                    a(href="/user/contact") Liên hệ
+                
+
                     
